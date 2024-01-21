@@ -32,12 +32,12 @@
                 <Insets left="100.0" />
             </HBox.margin>
         </Button>
-        <CheckBox fx:id="checkBox_Continu" mnemonicParsing="false" prefHeight="25.0" prefWidth="82.0" text="En continu">
+        <CheckBox fx:id="checkBox_Continu" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" text="En continu">
             <HBox.margin>
                 <Insets left="20.0" />
             </HBox.margin>
         </CheckBox>
-        <Label fx:id="cursorCoords" prefHeight="26.0" prefWidth="130.0">
+        <Label fx:id="cursorCoords" prefHeight="26.0" prefWidth="158.0">
             <HBox.margin>
                 <Insets left="90.0" />
             </HBox.margin>

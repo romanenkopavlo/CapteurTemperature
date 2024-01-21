@@ -1,6 +1,7 @@
 package org.example.monitoringtemperatures;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
@@ -10,6 +11,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import jssc.SerialPortException;
 
 import java.net.URL;
@@ -79,6 +81,14 @@ public class FXML_Controller implements Initializable {
         timer.scheduleAtFixedRate(updateTask, 0, 5000);
 
         lineChart.getData().add(series);
+        lineChart.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double time = xAxis.getValueForDisplay(event.getX()).doubleValue();
+                double temperature = yAxis.getValueForDisplay(event.getY()).doubleValue();
+                cursorCoords.setText("Time: " + df.format(time) + "  °C: " + df.format(temperature));
+            }
+        });
     }
     private void base_De_Temps() {
     }
