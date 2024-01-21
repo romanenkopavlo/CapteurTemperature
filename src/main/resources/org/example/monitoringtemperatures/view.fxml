@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="394.0" prefWidth="681.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.monitoringtemperatures.FXML_Controller">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <LineChart fx:id="lineChart" prefHeight="259.0" prefWidth="642.0">
+        <xAxis>
+            <NumberAxis label="temps (s) x 5" prefHeight="53.0" prefWidth="558.0" side="BOTTOM" upperBound="95.0" fx:id="xAxis" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yAxis" label="Temperature (°C)" lowerBound="-75.0" prefHeight="123.0" prefWidth="55.0" side="LEFT" upperBound="250.0" />
+        </yAxis>
+    </LineChart>
+    <HBox prefHeight="6.0" prefWidth="642.0">
+        <VBox.margin>
+            <Insets />
+        </VBox.margin>
+        <Label fx:id="label_Valeur" prefHeight="26.0" prefWidth="141.0">
+            <HBox.margin>
+                <Insets left="20.0" />
+            </HBox.margin>
+        </Label>
+
+        <Button fx:id="RAZ" mnemonicParsing="false" prefHeight="26.0" prefWidth="52.0" text="RAZ">
+            <HBox.margin>
+                <Insets left="100.0" />
+            </HBox.margin>
+        </Button>
+        <CheckBox fx:id="checkBox_Continu" mnemonicParsing="false" prefHeight="25.0" prefWidth="82.0" text="En continu">
+            <HBox.margin>
+                <Insets left="20.0" />
+            </HBox.margin>
+        </CheckBox>
+        <Label fx:id="cursorCoords" prefHeight="26.0" prefWidth="130.0">
+            <HBox.margin>
+                <Insets left="90.0" />
+            </HBox.margin>
+        </Label>
+    </HBox>
+</VBox>
