@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -39,7 +40,7 @@ public class FXML_Controller implements Initializable {
     Label cursorCoords;
     Series<Number, Number> series;
     String port = "COM10";
-    int NBS_DE_POINTS;
+    int NBS_DE_POINTS = 20;
     boolean stop;
     SimpleDateFormat simpleDateFormat;
     DecimalFormat df = new DecimalFormat("0.##");
@@ -50,30 +51,34 @@ public class FXML_Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         series = new XYChart.Series<>();
         lineChart.setTitle("Graphique");
+        lineChart.setCursor(Cursor.CROSSHAIR);
         series.setName("Capteur Z56");
         capteurTemperature = new CapteurTemperature();
+        checkBox_Continu.setSelected(false);
         TimerTask updateTask = new TimerTask() {
             int iteration = 0;
             @Override
             public void run() {
-                Platform.runLater(() -> {
-                    try {
-                        capteurTemperature.configureLiaisonSerieCapteur(port);
-                        capteurTemperature.ecrire("IEEE".getBytes(StandardCharsets.US_ASCII));
-                        capteurTemperature.ecrire("\r".getBytes(StandardCharsets.US_ASCII));
-                        Thread.sleep(1000);
-                        series.getData().add(new XYChart.Data<>(iteration, capteurTemperature.getValeurLue()));
-                        label_Valeur.setText("Value received: " + df.format(capteurTemperature.getValeurLue()));
-                        capteurTemperature.fermerLiaisonSerieCapteur();
-                        iteration += 5;
+                if (!stop) {
+                    Platform.runLater(() -> {
+                        try {
+                            capteurTemperature.configureLiaisonSerieCapteur(port);
+                            capteurTemperature.ecrire("IEEE".getBytes(StandardCharsets.US_ASCII));
+                            capteurTemperature.ecrire("\r".getBytes(StandardCharsets.US_ASCII));
+                            Thread.sleep(1000);
+                            series.getData().add(new XYChart.Data<>(iteration, capteurTemperature.getValeurLue()));
+                            label_Valeur.setText("Value received: " + df.format(capteurTemperature.getValeurLue()));
+                            capteurTemperature.fermerLiaisonSerieCapteur();
+                            iteration += 5;
 
-                        if (iteration >= 100) {
-                            timer.cancel();
+                            if (iteration >= NBS_DE_POINTS * 5) {
+                                timer.cancel();
+                            }
+                        } catch (SerialPortException | InterruptedException e) {
+                            throw new RuntimeException(e);
                         }
-                    } catch (SerialPortException | InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                    });
+                }
             }
         };
 
@@ -87,6 +92,13 @@ public class FXML_Controller implements Initializable {
                 double time = xAxis.getValueForDisplay(event.getX()).doubleValue();
                 double temperature = yAxis.getValueForDisplay(event.getY()).doubleValue();
                 cursorCoords.setText("Time: " + df.format(time) + "  °C: " + df.format(temperature));
+            }
+        });
+        checkBox_Continu.setOnAction(event -> {
+            if (checkBox_Continu.isSelected()) {
+                stop = true;
+            } else {
+                stop = false;
             }
         });
     }
