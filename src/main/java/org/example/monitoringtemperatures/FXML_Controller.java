@@ -1,10 +1,10 @@
 package org.example.monitoringtemperatures;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -12,7 +12,6 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import jssc.SerialPortException;
 
 import java.net.URL;
@@ -40,8 +39,7 @@ public class FXML_Controller implements Initializable {
     Label cursorCoords;
     Series<Number, Number> series;
     String port = "COM10";
-    int NBS_DE_POINTS = 20;
-    boolean stop;
+    boolean stop = false;
     SimpleDateFormat simpleDateFormat;
     DecimalFormat df = new DecimalFormat("0.##");
     Timer timer;
@@ -70,10 +68,6 @@ public class FXML_Controller implements Initializable {
                             label_Valeur.setText("Value received: " + df.format(capteurTemperature.getValeurLue()));
                             capteurTemperature.fermerLiaisonSerieCapteur();
                             iteration += 5;
-
-                            if (iteration >= NBS_DE_POINTS * 5) {
-                                timer.cancel();
-                            }
                         } catch (SerialPortException | InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -82,26 +76,24 @@ public class FXML_Controller implements Initializable {
             }
         };
 
+        lineChart.getData().add(series);
+
         timer = new Timer(true);
         timer.scheduleAtFixedRate(updateTask, 0, 5000);
 
-        lineChart.getData().add(series);
-        lineChart.setOnMouseMoved(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("x " + event.getX() +  "y = " +  event.getY());
-                double time = xAxis.getValueForDisplay(event.getX()).doubleValue();
-                double temperature = yAxis.getValueForDisplay(event.getY()).doubleValue();
-                cursorCoords.setText("Time: " + df.format(time) + "  °C: " + df.format(temperature));
-            }
-        });
-        checkBox_Continu.setOnAction(event -> {
-            if (checkBox_Continu.isSelected()) {
-                stop = true;
-            } else {
-                stop = false;
-            }
-        });
+        RAZ.setOnAction(event -> series.getData().clear());
+
+        final Node chartBackground = lineChart.lookup(".chart-plot-background");
+
+        for (Node n: chartBackground.getParent().getChildrenUnmodifiable()) {
+            n.setMouseTransparent(n != chartBackground);
+        }
+
+        chartBackground.setOnMouseEntered(event -> cursorCoords.setVisible(true));
+        chartBackground.setOnMouseExited(event -> cursorCoords.setVisible(false));
+        chartBackground.setOnMouseMoved(event ->  cursorCoords.setText("Time: " + df.format(xAxis.getValueForDisplay(event.getX())) + "  °C: " + df.format(yAxis.getValueForDisplay(event.getY()))));
+
+        checkBox_Continu.setOnAction(event -> stop = checkBox_Continu.isSelected());
     }
     private void base_De_Temps() {
     }
