@@ -89,6 +89,7 @@ public class FXML_Controller implements Initializable {
         lineChart.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                System.out.println("x " + event.getX() +  "y = " +  event.getY());
                 double time = xAxis.getValueForDisplay(event.getX()).doubleValue();
                 double temperature = yAxis.getValueForDisplay(event.getY()).doubleValue();
                 cursorCoords.setText("Time: " + df.format(time) + "  °C: " + df.format(temperature));
