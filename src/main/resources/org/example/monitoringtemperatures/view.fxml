@@ -5,19 +5,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" prefHeight="346.0" prefWidth="790.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.monitoringtemperatures.FXML_Controller">
+<VBox alignment="CENTER" prefHeight="378.0" prefWidth="790.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.monitoringtemperatures.FXML_Controller">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-    <LineChart fx:id="lineChart" prefHeight="267.0" prefWidth="750.0">
+    <LineChart fx:id="lineChart" prefHeight="285.0" prefWidth="750.0">
         <xAxis>
-            <NumberAxis label="temps (s) x 5" prefHeight="53.0" prefWidth="558.0" side="BOTTOM" upperBound="95.0" fx:id="xAxis" />
+            <CategoryAxis label="Temps" prefHeight="70.0" prefWidth="667.0" side="BOTTOM" fx:id="xAxis" />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yAxis" label="Temperature (°C)" lowerBound="-75.0" prefHeight="123.0" prefWidth="55.0" side="LEFT" upperBound="250.0" />
+            <NumberAxis fx:id="yAxis" label="Temperature (°C)" lowerBound="-75.0" prefHeight="186.0" prefWidth="63.0" side="LEFT" upperBound="250.0" />
         </yAxis>
     </LineChart>
-    <HBox prefHeight="6.0" prefWidth="642.0">
+    <HBox prefHeight="29.0" prefWidth="750.0">
         <VBox.margin>
             <Insets />
         </VBox.margin>
