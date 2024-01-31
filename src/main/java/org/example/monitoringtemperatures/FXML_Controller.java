@@ -52,13 +52,13 @@ public class FXML_Controller implements Initializable {
         series.setName("Capteur Z56");
         capteurTemperature = new CapteurTemperature();
         checkBox_Continu.setSelected(false);
+        lineChart.getData().add(series);
         base_De_Temps();
 
         RAZ.setOnAction(event -> {
             lineChart.getData().clear();
             series.getData().clear();
-            timer.cancel();
-            base_De_Temps();
+            lineChart.getData().add(series);
         });
 
         final Node chartBackground = lineChart.lookup(".chart-plot-background");
@@ -99,6 +99,5 @@ public class FXML_Controller implements Initializable {
         };
         timer = new Timer(true);
         timer.scheduleAtFixedRate(updateTask, 0, 5000);
-        lineChart.getData().add(series);
     }
 }

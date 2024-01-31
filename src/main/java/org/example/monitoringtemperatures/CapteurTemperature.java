@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 public class CapteurTemperature extends LiaisonSerie {
     private byte [] CHARS_START;
     private byte [] CHARS_START_IEEE;
+    private byte [] CHARS_FINAL;
     private final int STOP = 1;
     private final int PARITY = 0;
     private final int DATA = 8;
@@ -55,14 +56,24 @@ public class CapteurTemperature extends LiaisonSerie {
     }
     public void serialEvent(SerialPortEvent spe) {
         df = new DecimalFormat("0.##");
-        super.serialEvent(spe);
         LONGUEUR_TRAME = spe.getEventValue();
-        CHARS_START_IEEE = liretrameCaptuerModeIEEE();
-
-        System.out.printf("""
-                --- Reception ---
-                %s Celsius
-                %s Kelvin
-                %n""", df.format(conversionTrameCapteur(CHARS_START_IEEE)), df.format(conversionTrameCapteur(CHARS_START_IEEE) + 273.15f));
+        switch (LONGUEUR_TRAME) {
+            case 2:
+                CHARS_START = liretrameCapteurModeNormal();
+                System.out.printf("""
+                        --- Reception ---
+                        %s Celsius
+                        %s Kelvin
+                        %n""", df.format(decodageTrameCapteur(CHARS_START)), df.format(decodageTrameCapteur(CHARS_START) + 273.15f));
+                break;
+            case 4:
+                CHARS_START_IEEE = liretrameCaptuerModeIEEE();
+                System.out.printf("""
+                        --- Reception ---
+                        %s Celsius
+                        %s Kelvin
+                        %n""", df.format(conversionTrameCapteur(CHARS_START_IEEE)), df.format(conversionTrameCapteur(CHARS_START_IEEE) + 273.15f));
+                break;
+        }
     }
 }
